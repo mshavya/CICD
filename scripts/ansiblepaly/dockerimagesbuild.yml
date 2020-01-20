@@ -1,0 +1,22 @@
+---
+- hosts: all
+  become: true
+  tasks:
+    - name: building docker image
+      command: docker build -t simple-devops-image:latest .
+      args:
+        chdir: /opt/docker
+
+    - name: creating tag to image
+      command: docker tag simple-devops-image viswanatha/simple-devops-image:latest
+    - name: Log into DockerHub
+      docker_login:
+        username: viswanatha
+        password: Ilum@1145
+
+    - name: push image on to dockerhub
+      command: docker push viswanatha/simple-devops-image:latest
+
+    - name: deleting image on local system
+      command: docker rmi viswanatha/simple-devops-image
+      ignore_errors: yes
